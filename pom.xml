@@ -58,7 +58,7 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>${compiler.version}</version>
 				<configuration>
-					<release>11</release>  <!--or <release>10</release> -->
+					<!--<release>11</release> -->  <!--or <release>10</release> -->
 				</configuration>
 			</plugin>
 			<!-- KZN No web.xml file for configuration KZN -->
