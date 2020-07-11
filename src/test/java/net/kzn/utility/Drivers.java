@@ -18,8 +18,8 @@ public class Drivers {
 	        ChromeOptions options = new ChromeOptions();
 	        options.addArguments("window-size=1400,600");
 	        options.addArguments("headless");
-		options.add_argument('--no-sandbox')
-		options.add_argument('--disable-dev-shm-usage')
+		options.addArguments('--no-sandbox')
+		options.addArguments('--disable-dev-shm-usage')
 			driver = new ChromeDriver(options);
 		}				
 		return driver;
