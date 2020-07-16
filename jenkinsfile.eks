@@ -1,0 +1,44 @@
+pipeline {
+    agent any
+    tools {
+        maven 'maven-3.3.9' 
+        jdk 'JAVA_HOME'
+    }
+
+ 
+
+    stages {
+        stage('Hello') {
+            steps {
+                echo 'Hello World'
+            }
+        }
+        stage('git checkout'){
+            steps {
+                git credentialsId: '4fc60b00-028f-4a55-b67f-ae8525425bf7', url: 'https://github.com/suchidas/spring-jenkins-project.git'
+            }
+        }
+
+ 
+
+        stage('compile'){
+            steps {
+                sh label: '', script: 'mvn clean compile'
+            }
+        }
+        stage('Junit Test cases'){
+            steps {
+                sh label: '', script: 'mvn compiler:testCompile -Dfilename=testng-unit.xml surefire:test'
+            }
+            post{
+                always{
+                    step ([$class: 'Publisher'])
+                }
+            }
+        }
+        stage ('Package'){
+            steps {
+                sh label: '', script: 'mvn clean package -DskipTests'
+            }
+        }
+}
