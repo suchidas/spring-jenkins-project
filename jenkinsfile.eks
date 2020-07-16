@@ -41,4 +41,5 @@ pipeline {
                 sh label: '', script: 'mvn clean package -DskipTests'
             }
         }
+    }
 }
