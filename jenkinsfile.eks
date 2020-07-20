@@ -1,45 +1,80 @@
 pipeline {
     agent any
-    tools {
-        maven 'maven-3.3.9' 
-        jdk 'JAVA_HOME'
+    tools { 
+        maven 'Maven 3.3.9' 
+        
+        
     }
-
- 
-
     stages {
         stage('Hello') {
             steps {
                 echo 'Hello World'
             }
         }
-        stage('git checkout'){
+
+        stage('SCM Checkout')  {
             steps {
-                git credentialsId: '4fc60b00-028f-4a55-b67f-ae8525425bf7', url: 'https://github.com/suchidas/spring-jenkins-project.git'
+                git credentialsId: 'githuncredentails', url: 'https://github.com/dscorpian29/spring-jenkins-project.git'
             }
-        }
+        } 
 
- 
-
-        stage('compile'){
+        stage('Compile') {
             steps {
                 sh label: '', script: 'mvn clean compile'
             }
         }
-        stage('Junit Test cases'){
+
+        stage('Application_Unit_Test'){
             steps {
                 sh label: '', script: 'mvn compiler:testCompile -Dfilename=testng-unit.xml surefire:test'
             }
             post{
                 always{
-                    step ([$class: 'Publisher'])
+                    step([$class: 'Publisher'])
                 }
             }
         }
-        stage ('Package'){
+        stage('Code Coverage'){
             steps {
-                sh label: '', script: 'mvn clean package -DskipTests'
+
+                //sh 'mvn cobertura:cobertura -Dcobertura.report.format=xml -Dsurefire.suiteXmlFiles=testng-unit.xml '
+                  sh ' mvn clean install cobertura:cobertura  -Dcobertura.report.format=xml -Dsurefire.suiteXmlFiles=testng-unit.xml'
+                //  sh 'cat target/site/cobertura/coverage.xml'
             }
+
         }
+        stage('SonarQube analysis') {
+        
+        steps {
+       
+        withSonarQubeEnv('Sonarqube') { // If you have configured more than one global server connection, you can specify its name
+        sh "mvn sonar:sonar"
+      //  sh "${scannerHome}/bin/sonar-scanner"
+        }
+      }
+
+  }
+  
+      stage('sonarqube quality gate'){
+            steps {
+            script{        
+                 timeout(time: 1, unit: 'HOURS') { // Just in case something goes wrong, pipeline will be killed after a timeout
+                 def qg = waitForQualityGate() // Reuse taskId previously collected by withSonarQubeEnv 
+                 if (qg.status != 'OK') 
+                 {              
+                 error "Pipeline aborted due to quality gate failure: ${qg.status}"  
+                 }   
+                 } 
+                 }
+            }
+      }
+      //  stage('Package'){
+      //      steps {
+      //          sh label: '', script: 'scp -o StrictHostKeyChecking=no target/*.war ec2-user@52.55.54.236:/opt/tomcat/webapps'
+      //      }
+      //  }
+        
+        
     }
+
 }
