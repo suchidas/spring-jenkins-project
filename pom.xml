@@ -17,6 +17,11 @@
 		<surefire.version>2.22.2</surefire.version>
 		<war.version>3.2.3</war.version>
 		<compiler.version>3.8.1</compiler.version>	
+		<!-- Cobertura SonarQube Setup -->
+	        <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+	        <sonar.java.coveragePlugin>cobertura</sonar.java.coveragePlugin>
+               <sonar.cobertura.reportPath>target/site/cobertura/coverage.xml</sonar.cobertura.reportPath>
+
 	</properties>
 
 
@@ -81,6 +86,29 @@
 					</suiteXmlFiles>
 				</configuration>
 			</plugin>
+			<!-- Cobertura -->
+			<plugin>
+		    <groupId>org.codehaus.mojo</groupId>
+		    <artifactId>cobertura-maven-plugin</artifactId>
+		    <version>2.7</version>
+		    <executions>
+		      <execution>
+		       <id>create-coverage</id>
+		       <phase>test</phase>
+		       <configuration>
+		         <format>html</format>
+		         <format>xml</format>
+		         <maxmem>256m</maxmem>
+		         <aggregate>true</aggregate>
+		         <outputDirectory>${cobertura-maven-plugin.outputDirectory}</outputDirectory>
+		       </configuration>
+		       <goals>
+		         <goal>cobertura</goal>
+		       </goals>
+		       </execution>
+		      </executions>
+		  </plugin>
+
 		</plugins>
 	</build>
 </project>
