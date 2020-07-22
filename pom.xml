@@ -98,7 +98,7 @@
 		       <configuration>
 		         <format>html</format>
 		         <format>xml</format>
-		         <maxmem>128m</maxmem>
+		         <maxmem>256m</maxmem>
 		         <aggregate>true</aggregate>
 		         <outputDirectory>${cobertura-maven-plugin.outputDirectory}</outputDirectory>
 		       </configuration>
