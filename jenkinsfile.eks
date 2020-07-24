@@ -1,10 +1,10 @@
 pipeline {
     agent any
-    tools { 
-        maven 'Maven 3.3.9' 
-        
-        
+    tools {
+        maven 'maven-3.3.9' 
+        jdk 'JAVA_HOME'
     }
+
     stages {
         stage('Hello') {
             steps {
@@ -14,17 +14,46 @@ pipeline {
 
         stage('SCM Checkout')  {
             steps {
-                git credentialsId: 'githuncredentails', url: 'https://github.com/dscorpian29/spring-jenkins-project.git'
+                git credentialsId: '4fc60b00-028f-4a55-b67f-ae8525425bf7', url: 'https://github.com/suchidas/spring-jenkins-project.git'
             }
         } 
 
         stage('Compile') {
             steps {
-                sh label: '', script: 'mvn clean compile'
+                sh label: '', script: 'mvn clean package -DskipTests=true'
             }
         }
+         
+		 
+		stage('Build Docker Imager'){
+		steps {
+        sh 'docker build -t suchismita1/spring-project:0.0.1 .'
+	  }
+              
+		} 
+		
+		stage('Push docker image'){
+		steps {
+        withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'PASSWORD', usernameVariable: 'USER')]) {
+    	sh 'docker login -u $USER -p $PASSWORD'
+	sh 'docker push suchismita1/spring-project:0.0.1'
+}
+	  }
+              
+		}
+		stage('Run Docker container '){
+		steps {
+       
+    	sh 'docker run -it -d --name webapp -p 8090:8080 suchismita1/spring-project:0.0.1 '
+	
 
-        stage('Application_Unit_Test'){
+	  }
+              
+		}
+		
+		 
+		 
+       /* stage('Application_Unit_Test'){
             steps {
                 sh label: '', script: 'mvn compiler:testCompile -Dfilename=testng-unit.xml surefire:test'
             }
@@ -33,8 +62,8 @@ pipeline {
                     step([$class: 'Publisher'])
                 }
             }
-        }
-        stage('Code Coverage'){
+        } */
+      /*  stage('Code Coverage'){
             steps {
 
                 //sh 'mvn cobertura:cobertura -Dcobertura.report.format=xml -Dsurefire.suiteXmlFiles=testng-unit.xml '
@@ -42,20 +71,20 @@ pipeline {
                 //  sh 'cat target/site/cobertura/coverage.xml'
             }
 
-        }
-        stage('SonarQube analysis') {
+        } */
+    /*    stage('SonarQube analysis') {
         
         steps {
        
-        withSonarQubeEnv('sonar') { // If you have configured more than one global server connection, you can specify its name
+        withSonarQubeEnv('Sonarqube') { // If you have configured more than one global server connection, you can specify its name
         sh "mvn sonar:sonar"
       //  sh "${scannerHome}/bin/sonar-scanner"
         }
       }
 
-  }
+  } */
   
-      stage('sonarqube quality gate'){
+    /*  stage('sonarqube quality gate'){
             steps {
             script{        
                  timeout(time: 1, unit: 'HOURS') { // Just in case something goes wrong, pipeline will be killed after a timeout
@@ -67,7 +96,7 @@ pipeline {
                  } 
                  }
             }
-      }
+      } */
       //  stage('Package'){
       //      steps {
       //          sh label: '', script: 'scp -o StrictHostKeyChecking=no target/*.war ec2-user@52.55.54.236:/opt/tomcat/webapps'
