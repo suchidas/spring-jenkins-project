@@ -1,18 +1,20 @@
 ---
-- name: Run on dbserver
-  hosts: dbserver
+- name: Run on db server
+  hosts: localhost
   tasks:
-  - name: pull an image
+  - name: build an image
     docker_image:
-      name: suchismita1/spring-project:0.0.1
-      source: pull
+      name: suchismita1/spring-project
+      path: /var/lib/jenkins/workspace/target/*.war
+      state: present
 
   - name: run container
     docker_container:
       name: webapps
-      image: suchismita1/spring-project:0.0.1
+      image: suchismita1/spring-project:latest
       state: started
       ports:
       - "8090:8080"
       tty: true
       detach: true
+
