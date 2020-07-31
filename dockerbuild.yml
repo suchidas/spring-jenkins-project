@@ -5,7 +5,7 @@
   - name: build an image
     docker_image:
       name: suchismita1/spring-project
-      path: target/*.war
+      path: /home/ec2-user/testansible2/target/*.war
       state: present
 
   - name: run container
