@@ -9,7 +9,7 @@
       source: pull
       
    - name: run container
-      docker_container:
-        image: suchismita1/spring-project:0.0.1
-        name: webapp
-        state: started
+     docker_container:
+       image: suchismita1/spring-project:0.0.1
+       name: webapp
+       state: started
