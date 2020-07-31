@@ -1,6 +1,6 @@
 ---
 - name: Run on db server
-  hosts: dbserver
+  hosts: localhost
   tasks:
   - name: build an image
     docker_image:
