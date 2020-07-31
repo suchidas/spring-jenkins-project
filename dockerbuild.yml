@@ -1,0 +1,15 @@
+---
+- name: Run on local host
+  hosts: localhost
+  
+  tasks:
+  - name: pull an image
+    docker_image:
+      name: suchismita1/spring-project:0.0.1
+      source: pull
+      
+   - name: 
+      docker_container:
+        image: suchismita1/spring-project:0.0.1
+        name: webapp
+        state: started
