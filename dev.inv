@@ -1,6 +1,6 @@
-[dbserver]
-3.15.138.171
+[localhost]
+18.216.148.49
 
 #All servers
 [multi:children]
-dbserver
+localhost
