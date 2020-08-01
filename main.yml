@@ -1,0 +1,19 @@
+---
+- name: Run on db server
+  hosts: localhost
+  tasks:
+  - name: build an image
+    docker_image:
+      name: suchismita1/spring-project
+      path: test
+      state: present
+
+  - name: run container
+    docker_container:
+      name: webapps
+      image: suchismita1/spring-project:latest
+      state: started
+      ports:
+      - "8080:8090"
+      tty: true
+      detach: true
