@@ -1,13 +1,11 @@
 ---
-- name: Run on localhost
+- name: Run on db server
   hosts: localhost
   tasks:
-  - name: Copy Dockerfile
-    copy: src=Dockerfile dest=/tmp/path/
-  - name: Build spring image
+  - name: build an image
     docker_image:
-      path: /tmp/path/
       name: suchismita1/spring-project
+      path: Dockerfile
       state: present
 
   - name: run container
